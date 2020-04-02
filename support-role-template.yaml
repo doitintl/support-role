@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: >
   "This Role grants DoiT International the ability to file and follow an AWS support case in the customer's account
 
-  This Role does not allow DoiT International to access to other resources in the customer's account."
+  This Role does not allow DoiT International to access to ANY other resources in the customer's account."
 
 Parameters:
   TrustedAccount:
