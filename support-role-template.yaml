@@ -1,0 +1,50 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  "This Role grants DoiT International the ability to file and follow an AWS support case in the customer's account
+
+  This Role does not allow DoiT International to access to other resources in the customer's account."
+
+Parameters:
+  TrustedAccount:
+    Type: Number
+    Description: DoiT International Account Id. Engineers will assume the IAM Role in your account from this AWS account.
+    MinValue: 100000000000
+    MaxValue: 999999999999
+    NoEcho: true
+
+Resources:
+  DoitSupportRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: DoitSupportRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: "Allow"
+          Principal:
+            AWS: !Ref TrustedAccount
+          Action:
+          - "sts:AssumeRole"
+          Condition:
+            BoolIfExists:
+              aws:MultiFactorAuthPresent: "true"
+      Policies:
+      - PolicyName: "Support-Only-Policy"
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Sid: support
+            Effect: Allow
+            Action:
+            - support:*
+            Resource: "*"
+          - Sid: denyresolve
+            Effect: Deny
+            Action:
+            - support:ResolveCase
+            Resource: "*"
+Outputs:
+  ConnectionURL:
+    Value: !Join [ "", ["https://signin.aws.amazon.com/switchrole?roleName=DoitSupportRole=", !Ref "AWS::AccountId"]]
+    Description: External user cross-account access URL
