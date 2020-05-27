@@ -12,12 +12,16 @@ Parameters:
     MinValue: 100000000000
     MaxValue: 999999999999
     NoEcho: true
+  SupportRoleName:
+    Type: String
+    Description: Support role name
+    Default: DoitSupportRole
 
 Resources:
   DoitSupportRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: DoitSupportRole
+      RoleName: !Ref SupportRoleName
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -46,5 +50,5 @@ Resources:
             Resource: "*"
 Outputs:
   ConnectionURL:
-    Value: !Join [ "", ["https://signin.aws.amazon.com/switchrole?roleName=DoitSupportRole=", !Ref "AWS::AccountId"]]
+    Value: !Join [ "", ["https://signin.aws.amazon.com/switchrole?roleName=", !Ref "SupportRoleName" ,"=", !Ref "AWS::AccountId"]]
     Description: External user cross-account access URL
